@@ -30,6 +30,8 @@ passport.use(User.createStrategy());
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
+//app.set('views', path.join(__dirname, "views"));
+//app.set('view engine', 'hbs');
 
 // GET requests
 app.get('/', function (req, res) {
@@ -45,23 +47,26 @@ app.get('/register', function (req, res) {
   res.sendFile(path.join(__dirname, '/static/register.html'));
 })
 
-app.get('/addImages', function(req, res) {
+app.get('/addImages', connectEnsureLogin.ensureLoggedIn(), function(req, res) {
   // Use Handlebars to generate images page
   res.sendFile(path.join(__dirname, 'addImages.html'))
 })
 
-app.get('/imgs', function(req, res) {
+app.get('/imgs', connectEnsureLogin.ensureLoggedIn(), function(req, res) {
   // Use Handlebars to generate images page
-  res.send("Load User images here.")
+  // res.send("Load User images here.")
+  res.send(req.session.passport.user);
 })
 
+app.get('/logout', function(req,res) {
+  req.logout();
+  res.redirect('/login');
+})
 
 // POST requests
-app.post('/login', function (req, res) {
+app.post('/login', passport.authenticate('local', { failureRedirect: '/' }), function (req, res) {
   //Insert login code here
-  let username = req.body.username;
-  let password = req.body.password;
-  res.send(`Username: ${username} Password: ${password}`);
+  res.redirect('/imgs');
   // req.session.username = req.body.username;
   // res.send (`Hello ${req.session.username}. Your session ID is
   // ${req.sessionID} and your session expires in 
