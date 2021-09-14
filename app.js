@@ -2,18 +2,47 @@ var express = require('express');
 var fs = require('fs');
 var path = require('path');
 var bodyParser = require('body-parser');
+var session = require('express-session');
+var { v4: uuidv4 } = require('uuid');
+var passport = require('passport');
+var connectEnsureLogin = require('connect-ensure-login');
+
+const User = require('./user.js');
 
 var app = express();
 app.use(bodyParser.urlencoded({extended:false}));
+app.use(session({ 
+  genid: function (req) {
+    return uuidv4();
+  },
+  secret: 'XHu=<y)N3G@gR9{9exx#i9GlJ7ij,k',
+  resave: false,
+  saveUninitialized: true,
+  cookie: { maxAge: 60 * 60 * 1000 } // 1 hour
+}));
+
+app.use(bodyParser.urlencoded({ extended: false}));
+app.use(passport.initialize());
+app.use(passport.session());
+
+passport.use(User.createStrategy());
+
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
 
 // GET requests
 app.get('/', function (req, res) {
   res.sendFile(path.join(__dirname, '/static/index.html'));
+  //res.send(req.sessionID);
 });
 
 app.get('/login', function (req, res) {
   res.sendFile(path.join(__dirname, '/static/login.html'));
+})
+
+app.get('/register', function (req, res) {
+  res.sendFile(path.join(__dirname, '/static/register.html'));
 })
 
 app.get('/addImages', function(req, res) {
@@ -33,7 +62,17 @@ app.post('/login', function (req, res) {
   let username = req.body.username;
   let password = req.body.password;
   res.send(`Username: ${username} Password: ${password}`);
+  // req.session.username = req.body.username;
+  // res.send (`Hello ${req.session.username}. Your session ID is
+  // ${req.sessionID} and your session expires in 
+  // ${req.session.cookie.maxAge} milliseconds.`)
   //res.redirect('/users/' + req.user.username);
+})
+
+app.post('/register', function (req, res) {
+  let uname = req.body.username;
+  let pass = req.body.password;
+  User.register({username: uname, active: false}, pass);
 })
 
 app.post('/', function (req, res) {
