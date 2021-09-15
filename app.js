@@ -35,8 +35,8 @@ passport.deserializeUser(User.deserializeUser());
 //app.set('view engine', 'hbs');
 
 // Functions
-const isFileValid = (file) => {
-  const type = file.type.split('/').pop();
+const isFileValid = (filename) => {
+  const type = filename.split('.').pop();
   const validTypes = ['jpg','jpeg','bmp','gif','png']
   if (validTypes.indexOf(type) === -1) {
     return false;
@@ -112,6 +112,13 @@ app.post('/addImages', connectEnsureLogin.ensureLoggedIn(), function(req, res) {
   form.on('fileBegin', async (field, file) => {
     file.path = form.uploadDir + "/" + file.name;
   });
+
+  form.onPart = function (part) {
+    if (isFileValid(part.filename))
+      this.handlePart(part);
+    else
+      console.log('Incorrect file type.');
+  }
 
   form.parse (req, async (err, fields, files) => {
     console.log(fields);
