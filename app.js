@@ -6,6 +6,7 @@ var session = require('express-session');
 var { v4: uuidv4 } = require('uuid');
 var passport = require('passport');
 var connectEnsureLogin = require('connect-ensure-login');
+var formidable = require('formidable');
 
 const User = require('./user.js');
 
@@ -32,6 +33,18 @@ passport.deserializeUser(User.deserializeUser());
 
 //app.set('views', path.join(__dirname, "views"));
 //app.set('view engine', 'hbs');
+
+// Functions
+const isFileValid = (file) => {
+  const type = file.type.split('/').pop();
+  const validTypes = ['jpg','jpeg','bmp','gif','png']
+  if (validTypes.indexOf(type) === -1) {
+    return false;
+  }
+  return true;
+}
+
+
 
 // GET requests
 app.get('/', function (req, res) {
@@ -85,7 +98,43 @@ app.post('/', function (req, res) {
   res.send('Hello POST');
 })
 
+app.post('/addImages', connectEnsureLogin.ensureLoggedIn(), function(req, res) {
+  const uploadFolder = path.join(__dirname,'userImages/'+req.session.passport.user);
+  if (!fs.existsSync(uploadFolder)){
+    fs.mkdirSync(uploadFolder, { recursive: true });
+  }
 
+  // Parse file using formidable
+  const form = formidable.IncomingForm();
+  form.multiples = true;
+  form.maxFileSize = 50 * 1024 * 1024; // 5MB
+  form.uploadDir = uploadFolder;
+  form.on('fileBegin', async (field, file) => {
+    file.path = form.uploadDir + "/" + file.name;
+  });
+
+  form.parse (req, async (err, fields, files) => {
+    console.log(fields);
+    console.log(files);
+    if (err) {
+      console.log('Error parsing the files');
+      return res.status(400).json({
+        status: "Fail",
+        message: "There was an error parsing the files",
+        error: err
+      });
+    }
+
+
+
+  });
+
+
+
+  console.log(form);
+
+
+})
 
 var server = app.listen(3000, function() {
   var host = server.address().address
