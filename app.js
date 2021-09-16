@@ -49,15 +49,18 @@ const isFileValid = (filename) => {
   return true;
 }
 
-function getFolderID(uname) {
-  return User.findOne({ username: uname }, function (err, doc) {
-    if (err) {
-      return null;
-    }
-    else{
-      return doc;
-    }
-  });
+async function getFolderID(uname) {
+  try {
+    console.log("In getFolderID.")
+    var result =  await User.findOne({ username: uname }).exec();
+    //console.log(result);
+    return result.folder;
+  } catch (error) {
+    console.log("Error caught in getFolderID.");
+    return undefined;
+  }
+
+
 }
 
 
@@ -95,9 +98,11 @@ app.get('/logout', function(req,res) {
 })
 
 // POST requests
-app.post('/login', passport.authenticate('local', { failureRedirect: '/' }), function (req, res) {
+app.post('/login', passport.authenticate('local', { failureRedirect: '/' }), async function (req, res) {
   //Insert login code here
-  res.redirect('/imgs');
+  app.set('folderID', await getFolderID(req.session.passport.user));
+  res.send(app.get('folderID'));
+  //res.redirect('/imgs');
   // req.session.username = req.body.username;
   // res.send (`Hello ${req.session.username}. Your session ID is
   // ${req.sessionID} and your session expires in 
@@ -109,7 +114,7 @@ app.post('/register', function (req, res) {
   let uname = req.body.username;
   let pass = req.body.password;
   let userFolder = keygen._();
-  const uploadFolder = publicFolder + "/" + userFolder;
+  const uploadFolder = __dirname + publicFolder + "/" + userFolder;
   if (!fs.existsSync(uploadFolder)){
     fs.mkdirSync(uploadFolder, { recursive: true });
   }
@@ -123,8 +128,10 @@ app.post('/', function (req, res) {
 
 app.post('/addImages', connectEnsureLogin.ensureLoggedIn(), function(req, res) {
   //console.log(req.session.passport.user);
-  var userFolderID = getFolderID("aj");//req.session.passport.user);
-  const uploadFolder = __dirname + publicFolder + "/" + getFolderID(req.session.passport.user);
+  var userFolderID = app.get('folderID');
+
+  //console.log(userFolderID);
+  const uploadFolder = __dirname + publicFolder + "/" + userFolderID;
   //console.log(userFolderID);
   //console.log(uploadFolder);
 
