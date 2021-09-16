@@ -7,8 +7,10 @@ var { v4: uuidv4 } = require('uuid');
 var passport = require('passport');
 var connectEnsureLogin = require('connect-ensure-login');
 var formidable = require('formidable');
+const keygen = require('keygenerator')
 
 const User = require('./user.js');
+var publicFolder = "/public";
 
 var app = express();
 app.use(bodyParser.urlencoded({extended:false}));
@@ -22,17 +24,20 @@ app.use(session({
   cookie: { maxAge: 60 * 60 * 1000 } // 1 hour
 }));
 
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false}));
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(express.static(publicFolder));
 
 passport.use(User.createStrategy());
 
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
-//app.set('views', path.join(__dirname, "views"));
-//app.set('view engine', 'hbs');
+app.set('views', path.join(__dirname, "views"));
+app.set('view engine', 'hbs');
+
 
 // Functions
 const isFileValid = (filename) => {
@@ -44,6 +49,16 @@ const isFileValid = (filename) => {
   return true;
 }
 
+function getFolderID(uname) {
+  return User.findOne({ username: uname }, function (err, doc) {
+    if (err) {
+      return null;
+    }
+    else{
+      return doc;
+    }
+  });
+}
 
 
 // GET requests
@@ -68,7 +83,10 @@ app.get('/addImages', connectEnsureLogin.ensureLoggedIn(), function(req, res) {
 app.get('/imgs', connectEnsureLogin.ensureLoggedIn(), function(req, res) {
   // Use Handlebars to generate images page
   // res.send("Load User images here.")
-  res.send(req.session.passport.user);
+  // res.send(req.session.passport.user);
+  var userImages = ['cat1.jpg'];
+  //app.use()
+  res.render('userImages', { userImgs: userImages });
 })
 
 app.get('/logout', function(req,res) {
@@ -90,7 +108,12 @@ app.post('/login', passport.authenticate('local', { failureRedirect: '/' }), fun
 app.post('/register', function (req, res) {
   let uname = req.body.username;
   let pass = req.body.password;
-  User.register({username: uname, active: false}, pass);
+  let userFolder = keygen._();
+  const uploadFolder = publicFolder + "/" + userFolder;
+  if (!fs.existsSync(uploadFolder)){
+    fs.mkdirSync(uploadFolder, { recursive: true });
+  }
+  User.register({username: uname, folder: userFolder, active: false}, pass);
 })
 
 app.post('/', function (req, res) {
@@ -99,10 +122,12 @@ app.post('/', function (req, res) {
 })
 
 app.post('/addImages', connectEnsureLogin.ensureLoggedIn(), function(req, res) {
-  const uploadFolder = path.join(__dirname,'userImages/'+req.session.passport.user);
-  if (!fs.existsSync(uploadFolder)){
-    fs.mkdirSync(uploadFolder, { recursive: true });
-  }
+  //console.log(req.session.passport.user);
+  var userFolderID = getFolderID("aj");//req.session.passport.user);
+  const uploadFolder = __dirname + publicFolder + "/" + getFolderID(req.session.passport.user);
+  //console.log(userFolderID);
+  //console.log(uploadFolder);
+
 
   // Parse file using formidable
   const form = formidable.IncomingForm();
@@ -121,8 +146,8 @@ app.post('/addImages', connectEnsureLogin.ensureLoggedIn(), function(req, res) {
   }
 
   form.parse (req, async (err, fields, files) => {
-    console.log(fields);
-    console.log(files);
+    //console.log(fields);
+    //console.log(files);
     if (err) {
       console.log('Error parsing the files');
       return res.status(400).json({
@@ -138,8 +163,8 @@ app.post('/addImages', connectEnsureLogin.ensureLoggedIn(), function(req, res) {
 
 
 
-  console.log(form);
-
+  //console.log(form);
+  res.end("End of addImages post");
 
 })
 
