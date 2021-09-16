@@ -100,8 +100,8 @@ app.get('/logout', function(req,res) {
 // POST requests
 app.post('/login', passport.authenticate('local', { failureRedirect: '/' }), async function (req, res) {
   //Insert login code here
-  app.set('folderID', await getFolderID(req.session.passport.user));
-  res.send(app.get('folderID'));
+  req.session.folderID = await getFolderID(req.session.passport.user);
+  res.send(req.session.folderID);
   //res.redirect('/imgs');
   // req.session.username = req.body.username;
   // res.send (`Hello ${req.session.username}. Your session ID is
@@ -128,7 +128,7 @@ app.post('/', function (req, res) {
 
 app.post('/addImages', connectEnsureLogin.ensureLoggedIn(), function(req, res) {
   //console.log(req.session.passport.user);
-  var userFolderID = app.get('folderID');
+  var userFolderID = req.session.folderID;
 
   //console.log(userFolderID);
   const uploadFolder = __dirname + publicFolder + "/" + userFolderID;
