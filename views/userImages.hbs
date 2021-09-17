@@ -4,7 +4,10 @@
 <body>
 	<ul>
 		{{#each userImgs}}
-		<li> {{this}}</li>
+		<figure>
+			<img src="{{this.link}}">
+			<figcaption> {{this.filename}} </figcaption>
+			</figure>
 		{{/each}}
 	</ul>
 </body>

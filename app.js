@@ -10,7 +10,7 @@ var formidable = require('formidable');
 const keygen = require('keygenerator')
 
 const User = require('./user.js');
-var publicFolder = "/public";
+var publicFolder = "public";
 
 var app = express();
 app.use(bodyParser.urlencoded({extended:false}));
@@ -59,8 +59,19 @@ async function getFolderID(uname) {
     console.log("Error caught in getFolderID.");
     return undefined;
   }
+}
 
-
+function getPicsFromFolder(folder) {
+  var pics = [];
+  fs.readdir(__dirname+"/"+publicFolder+folder, function (err, files) {
+    if (err) {
+      return console.log('Unable to scan directory: ' + err);
+    }
+    files.forEach( function (file) {
+      pics.push({ link:folder+"/"+file, filename:file });
+    })
+  });
+  return pics;
 }
 
 
@@ -86,8 +97,8 @@ app.get('/addImages', connectEnsureLogin.ensureLoggedIn(), function(req, res) {
 app.get('/imgs', connectEnsureLogin.ensureLoggedIn(), function(req, res) {
   // Use Handlebars to generate images page
   // res.send("Load User images here.")
-  // res.send(req.session.passport.user);
-  var userImages = ['cat1.jpg'];
+  // res.send(req.session.passport.usr);
+  var userImages = getPicsFromFolder("/"+req.session.folderID);
   //app.use()
   res.render('userImages', { userImgs: userImages });
 })
@@ -114,7 +125,7 @@ app.post('/register', function (req, res) {
   let uname = req.body.username;
   let pass = req.body.password;
   let userFolder = keygen._();
-  const uploadFolder = __dirname + publicFolder + "/" + userFolder;
+  const uploadFolder = __dirname + "/" + publicFolder + "/" + userFolder;
   if (!fs.existsSync(uploadFolder)){
     fs.mkdirSync(uploadFolder, { recursive: true });
   }
@@ -131,7 +142,7 @@ app.post('/addImages', connectEnsureLogin.ensureLoggedIn(), function(req, res) {
   var userFolderID = req.session.folderID;
 
   //console.log(userFolderID);
-  const uploadFolder = __dirname + publicFolder + "/" + userFolderID;
+  const uploadFolder = __dirname + "/" + publicFolder + "/" + userFolderID;
   //console.log(userFolderID);
   //console.log(uploadFolder);
 
