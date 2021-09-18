@@ -1,5 +1,15 @@
 <!DOCTYPE html>
 <html>
+
+  <link rel='stylesheet' href="/static/navBar.css";>
+  <nav class='navBar'>
+    <ul>
+      <li><a href='/logout'> Logout </a></li>
+      <li class="navBarCurrent"><a href='/addImages'> Upload </a></li>
+      <li><a href='/imgs'> Home </a></li>
+    </ul>
+  </nav>
+
 <body>
 <p> Create add images form here. </p>
 <form action="/addImages" method="post" enctype='multipart/form-data'>

@@ -1,0 +1,39 @@
+/* Define the main Navigation block */
+.navBar {
+    display: block;
+    height: 50px;
+    line-height: 50px;
+    background-color: #333;
+}
+/* Remove bullets, margin and padding */
+.navBar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.navBar li {
+    display:  inline;
+    float: right;
+    /* Or you can use display: inline; */
+}
+/* Define the block styling for the links */
+.navBar li a {
+    display: inline-block;
+    text-align: center;
+    padding: 14px 16px;
+    color: orange;
+}
+/* This is optional, however if you want to display the active link differently apply a background to it */
+.navBar li a:visited {
+    color: orange;
+}
+.navBar li a:hover {
+    background-color:  white;
+}
+.navBar li a:active {
+    color: inherit;
+    background-color: #3786E1;
+}
+.navBarCurrent {
+    background-color: #3786E1;
+}

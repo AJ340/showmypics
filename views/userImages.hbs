@@ -1,6 +1,16 @@
 <!DOCTYPE html>
 <html>
 
+  <link rel='stylesheet' href="/static/navBar.css";>
+  <nav class='navBar'>
+    <ul>
+      <li><a href='/logout'> Logout </a></li>
+      <li><a href='/addImages'> Upload </a></li>
+      <li class="navBarCurrent"><a href='/imgs'> Home </a></li>
+    </ul>
+  </nav>
+
+
 <body>
 	<ul>
 		{{#each userImgs}}

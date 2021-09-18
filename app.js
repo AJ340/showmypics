@@ -77,16 +77,16 @@ function getPicsFromFolder(folder) {
 
 // GET requests
 app.get('/', function (req, res) {
-  res.sendFile(path.join(__dirname, '/static/index.html'));
+  res.sendFile(path.join(__dirname, "/" + publicFolder +'/static/index.html'));
   //res.send(req.sessionID);
 });
 
 app.get('/login', function (req, res) {
-  res.sendFile(path.join(__dirname, '/static/login.html'));
+  res.sendFile(path.join(__dirname, "/" + publicFolder + '/static/login.html'));
 })
 
 app.get('/register', function (req, res) {
-  res.sendFile(path.join(__dirname, '/static/register.html'));
+  res.sendFile(path.join(__dirname, "/" + publicFolder + '/static/register.html'));
 })
 
 app.get('/addImages', connectEnsureLogin.ensureLoggedIn(), function(req, res) {
@@ -105,15 +105,15 @@ app.get('/imgs', connectEnsureLogin.ensureLoggedIn(), function(req, res) {
 
 app.get('/logout', function(req,res) {
   req.logout();
-  res.redirect('/login');
+  res.redirect('/');
 })
 
 // POST requests
 app.post('/login', passport.authenticate('local', { failureRedirect: '/' }), async function (req, res) {
   //Insert login code here
   req.session.folderID = await getFolderID(req.session.passport.user);
-  res.send(req.session.folderID);
-  //res.redirect('/imgs');
+  //res.send(req.session.folderID);
+  res.redirect('/imgs');
   // req.session.username = req.body.username;
   // res.send (`Hello ${req.session.username}. Your session ID is
   // ${req.sessionID} and your session expires in 
@@ -126,10 +126,10 @@ app.post('/register', function (req, res) {
   let pass = req.body.password;
   let userFolder = keygen._();
   const uploadFolder = __dirname + "/" + publicFolder + "/" + userFolder;
+  User.register({username: uname, folder: userFolder, active: false}, pass);
   if (!fs.existsSync(uploadFolder)){
     fs.mkdirSync(uploadFolder, { recursive: true });
   }
-  User.register({username: uname, folder: userFolder, active: false}, pass);
 })
 
 app.post('/', function (req, res) {
@@ -182,7 +182,8 @@ app.post('/addImages', connectEnsureLogin.ensureLoggedIn(), function(req, res) {
 
 
   //console.log(form);
-  res.end("End of addImages post");
+  //res.end();
+  res.redirect("/imgs");
 
 })
 
