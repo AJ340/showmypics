@@ -95,11 +95,7 @@ app.get('/addImages', connectEnsureLogin.ensureLoggedIn(), function(req, res) {
 })
 
 app.get('/imgs', connectEnsureLogin.ensureLoggedIn(), function(req, res) {
-  // Use Handlebars to generate images page
-  // res.send("Load User images here.")
-  // res.send(req.session.passport.usr);
   var userImages = getPicsFromFolder("/"+req.session.folderID);
-  //app.use()
   res.render('userImages', { userImgs: userImages });
 })
 
@@ -110,15 +106,8 @@ app.get('/logout', function(req,res) {
 
 // POST requests
 app.post('/login', passport.authenticate('local', { failureRedirect: '/' }), async function (req, res) {
-  //Insert login code here
   req.session.folderID = await getFolderID(req.session.passport.user);
-  //res.send(req.session.folderID);
   res.redirect('/imgs');
-  // req.session.username = req.body.username;
-  // res.send (`Hello ${req.session.username}. Your session ID is
-  // ${req.sessionID} and your session expires in 
-  // ${req.session.cookie.maxAge} milliseconds.`)
-  //res.redirect('/users/' + req.user.username);
 })
 
 app.post('/register', function (req, res) {
@@ -139,14 +128,8 @@ app.post('/', function (req, res) {
 })
 
 app.post('/addImages', connectEnsureLogin.ensureLoggedIn(), function(req, res) {
-  //console.log(req.session.passport.user);
   var userFolderID = req.session.folderID;
-
-  //console.log(userFolderID);
   const uploadFolder = __dirname + "/" + publicFolder + "/" + userFolderID;
-  //console.log(userFolderID);
-  //console.log(uploadFolder);
-
 
   // Parse file using formidable
   const form = formidable.IncomingForm();
@@ -165,8 +148,6 @@ app.post('/addImages', connectEnsureLogin.ensureLoggedIn(), function(req, res) {
   }
 
   form.parse (req, async (err, fields, files) => {
-    //console.log(fields);
-    //console.log(files);
     if (err) {
       console.log('Error parsing the files');
       return res.status(400).json({
@@ -175,17 +156,8 @@ app.post('/addImages', connectEnsureLogin.ensureLoggedIn(), function(req, res) {
         error: err
       });
     }
-
-
-
   });
-
-
-
-  //console.log(form);
-  //res.end();
-  res.redirect("/imgs");
-
+ res.redirect("/imgs");
 })
 
 app.all('*', function (req, res) {
