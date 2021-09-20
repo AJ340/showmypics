@@ -2,11 +2,11 @@
 Welcome to the SHOWmyPICS repository. Below you can find everything you need to get started with the app.
 
 ## Screenshots
-Homepage - !(screenshots/smp_home.png)
-Login Page - !(screenshots/smp_login.png)
-Registration page - !(screenshots/smp_register.png)
-Upload Page - !(screenshots/smp_upload.png)
-Images page - !(screenshots/smp_imgs.png)
+Homepage - ![](screenshots/smp_home.png)
+Login Page - ![](screenshots/smp_login.png)
+Registration page - ![](screenshots/smp_register.png)
+Upload Page - ![](screenshots/smp_upload.png)
+Images page - ![](screenshots/smp_imgs.png)
 
 
 ## Dependencies
