@@ -10,20 +10,20 @@ Images page - ![](screenshots/smp_imgs.png)
 
 
 ## Dependencies
-mongodb - Database used for the application
-fs - File system manipulation
-body-parser - Used to parse json and for passport-local
-express-session - used by passport-local and also used to establish sessions with users
-uuid - used to configure passport securely
-mongoose - mongodb api
-passport - authentication library
-passport-local - local strategy for passport
-passport-local-mongoose - wrapper for passport-local and mongodb
-connectEnsureLogin - functions to see if user is logged in. Plugs into passport
-formidable - Library to parse forms including multiple file uploads
-hbs - handlebars templating engine
-keygen - generate keygen strings. Used to generate user folders
-./user.js - Custom made user schema.
+- mongodb - Database used for the application
+- fs - File system manipulation
+- body-parser - Used to parse json and for passport-local
+- express-session - used by passport-local and also used to establish sessions with users
+- uuid - used to configure passport securely
+- mongoose - mongodb api
+- passport - authentication library
+- passport-local - local strategy for passport
+- passport-local-mongoose - wrapper for passport-local and mongodb
+- connectEnsureLogin - functions to see if user is logged in. Plugs into passport
+- formidable - Library to parse forms including multiple file uploads
+- hbs - handlebars templating engine
+- keygen - generate keygen strings. Used to generate user folders
+- ./user.js - Custom made user schema.
 
 Setup
 Note: This project was developed and tested on ubuntu 20.04.3 LTS
@@ -72,6 +72,6 @@ Note: This app is a WIP if there are any bugs feel free to report them here on G
 
 Developer Notes:
 TODO:
-Styleize the Upload page
-Fix the known bug when a user tries to register with an existing username
-Switch all path strings to use path.join
+- Styleize the Upload page
+- Fix the known bug when a user tries to register with an existing username
+- Switch all path strings to use path.join
