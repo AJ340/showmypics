@@ -130,6 +130,7 @@ app.post('/register', function (req, res) {
   if (!fs.existsSync(uploadFolder)){
     fs.mkdirSync(uploadFolder, { recursive: true });
   }
+  res.redirect("/login");
 })
 
 app.post('/', function (req, res) {
