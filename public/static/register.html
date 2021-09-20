@@ -1,23 +1,30 @@
 
   <link rel='stylesheet' href="/static/navBar.css";>
+  <link rel='stylesheet' href="/static/login.css";>
+
   <nav class='navBar'>
     <ul>
-      <li> <a href='/login'> Login </a></li>
+      <li><a class="navBarCurrent" href="/register">Register</a><li>
+      <li><a href='/login'> Login </a></li>
       <li><a href='/'> Home </a></li>
     </ul>
   </nav>
 
 
+<div class='container'>
 <form action="/register" method="post">
     <div>
-        <label>Username:</label>
-        <input type="text" name="username"/>
+        <label for="username"> <b> Username: <b> </label>
+        <input type="text" name="username" placeholder='Enter Username'/>
     </div>
     <div>
-        <label>Password:</label>
-        <input type="password" name="password"/>
+        <label for="password"> <b> Password: <b> </label>
+        <input type="password" name="password" placeholder="Enter Password"/>
     </div>
     <div>
-        <input type="submit" value="Register"/>
+        <button class="registerButton" type="submit" value="Register"> Register</button>
     </div>
 </form>
+</div>
+
+<a href="/login">Login Here!</a>

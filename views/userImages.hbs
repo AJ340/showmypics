@@ -2,6 +2,7 @@
 <html>
 
   <link rel='stylesheet' href="/static/navBar.css";>
+  <link rel='stylesheet' href="/static/gallery.css";>
   <nav class='navBar'>
     <ul>
       <li><a href='/logout'> Logout </a></li>
@@ -12,14 +13,14 @@
 
 
 <body>
-	<ul>
-		{{#each userImgs}}
-		<figure>
-			<img src="{{this.link}}">
-			<figcaption> {{this.filename}} </figcaption>
-			</figure>
-		{{/each}}
-	</ul>
+	{{#each userImgs}}
+	<div class="gallery">
+			<a target="_blank" href="{{this.link}}">
+    		<img src="{{this.link}}" alt="User photo" width="600" height="400">
+			</a>
+			<div class="desc">{{this.filename}}</div>
+	</div>
+	{{/each}}
 </body>
 
 <html>
