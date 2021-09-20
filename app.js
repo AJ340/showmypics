@@ -53,7 +53,6 @@ async function getFolderID(uname) {
   try {
     console.log("In getFolderID.")
     var result =  await User.findOne({ username: uname }).exec();
-    //console.log(result);
     return result.folder;
   } catch (error) {
     console.log("Error caught in getFolderID.");
@@ -78,7 +77,6 @@ function getPicsFromFolder(folder) {
 // GET requests
 app.get('/', function (req, res) {
   res.sendFile(path.join(__dirname, "/" + publicFolder +'/static/index.html'));
-  //res.send(req.sessionID);
 });
 
 app.get('/login', function (req, res) {
