@@ -28,7 +28,7 @@ Images page - ![](screenshots/smp_imgs.png)
 Setup
 Note: This project was developed and tested on ubuntu 20.04.3 LTS
 
-### Download and install mongodb community.
+## Download and install mongodb community.
 Start the service
 ```
 sudo systemctl start mongod
@@ -42,7 +42,7 @@ Create the users db from the mongo shell
 use users
 ```
 
-### Donwload the code and navigate to the folder it is located in and launch it in the terminal
+## Donwload the code and navigate to the folder it is located in and launch it in the terminal
 ```
 npm init
 ```
@@ -61,7 +61,7 @@ npm install passport-local-mongoose
 npm install hbs
 ```
 
-### Run the app
+## Run the app
 ```
 node app.js
 ```
